@@ -1,0 +1,40 @@
+service: bnsec-api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+#  httpApi:
+#    authorizers:
+#      customAuthorizer:
+#        type: request
+#        functionName: bnsecAuthorizer
+#        identitySource: $request.header.Authorization
+#        enableSimpleResponses: true
+#        payloadVersion: '2.0'
+#        resultTtlInSeconds: 300
+#        environment:
+#          api_value: ${ssm:/ip_investigation_access_key}
+functions:
+  ip-investigate:
+    handler: handler.ip_investigate
+    environment:
+      abstract_api: ${ssm:/ip_investigations_abstract_api}
+      ipgeo_api_key: ${ssm:/ip_investigations_ipgeo_api_key}
+      ipstack_api_key: ${ssm:/ip_investigations_ipstack_api_key}
+      webhook: ${ssm:/ip_investigations_slack_webhook}
+      api_value: ${ssm:/ip_investigation_access_key}
+    events:
+      - httpApi:
+          method: get
+          path: /ipInfo
+#          authorizer:
+#            name: auth_function
+#  auth_function:
+#    handler: bnsecAuthorizer.handler
+#    environment:
+#      api_value: ${ssm:/ip_investigation_access_key}
+
+
+#Authorization
+#z2yF)/}Py;!r+m^=AZpq
